@@ -3,6 +3,7 @@
 import os
 from unittest.mock import patch
 
+import openai
 import pytest
 from pydantic import SecretStr
 
@@ -31,16 +32,16 @@ def test_telnyx_embeddings_default_api_base() -> None:
     """Test default API base URL."""
     with patch.dict(os.environ, {"TELNYX_API_KEY": "test-key"}):
         embeddings = TelnyxEmbeddings()
-        assert embeddings.telnyx_api_base == DEFAULT_API_BASE
+        assert embeddings.openai_api_base == DEFAULT_API_BASE
 
 
 def test_telnyx_embeddings_custom_api_base() -> None:
     """Test custom API base URL."""
     with patch.dict(os.environ, {"TELNYX_API_KEY": "test-key"}):
         embeddings = TelnyxEmbeddings(
-            telnyx_api_base="https://custom.api.com/v1"
+            base_url="https://custom.api.com/v1"
         )
-        assert embeddings.telnyx_api_base == "https://custom.api.com/v1"
+        assert embeddings.openai_api_base == "https://custom.api.com/v1"
 
 
 def test_telnyx_embeddings_api_key_from_env() -> None:
@@ -48,7 +49,7 @@ def test_telnyx_embeddings_api_key_from_env() -> None:
     with patch.dict(os.environ, {"TELNYX_API_KEY": "env-test-key"}):
         embeddings = TelnyxEmbeddings()
         assert (
-            embeddings.telnyx_api_key.get_secret_value()
+            embeddings.openai_api_key.get_secret_value()
             == "env-test-key"
         )
 
@@ -57,14 +58,18 @@ def test_telnyx_embeddings_api_key_as_secret_str() -> None:
     """Test API key is stored as SecretStr."""
     with patch.dict(os.environ, {"TELNYX_API_KEY": "test-key"}):
         embeddings = TelnyxEmbeddings()
-        assert isinstance(embeddings.telnyx_api_key, SecretStr)
+        assert isinstance(embeddings.openai_api_key, SecretStr)
 
 
 def test_telnyx_embeddings_missing_api_key() -> None:
     """Test that missing API key raises error."""
     with patch.dict(os.environ, {}, clear=True):
         os.environ.pop("TELNYX_API_KEY", None)
-        with pytest.raises(ValueError, match="TELNYX_API_KEY"):
+        os.environ.pop("OPENAI_API_KEY", None)
+        with pytest.raises(
+            openai.OpenAIError,
+            match="api_key",
+        ):
             TelnyxEmbeddings()
 
 
@@ -92,4 +97,4 @@ def test_telnyx_embeddings_api_base_from_env() -> None:
         },
     ):
         embeddings = TelnyxEmbeddings()
-        assert embeddings.telnyx_api_base == "https://env.api.com/v1"
+        assert embeddings.openai_api_base == "https://env.api.com/v1"
