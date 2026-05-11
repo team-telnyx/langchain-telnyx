@@ -34,6 +34,26 @@ Set the `TELNYX_API_KEY` environment variable with your Telnyx API key, or pass 
 
 Get an API key at [telnyx.com](https://telnyx.com).
 
+By default, `langchain-telnyx` uses the following OpenAI-compatible base URL:
+
+```text
+https://api.telnyx.com/v2/ai/openai
+```
+
+You can override it either with the `base_url` parameter or with the `TELNYX_API_BASE` environment variable.
+
+Example:
+
+```python
+from langchain_telnyx import ChatTelnyx
+
+chat = ChatTelnyx(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.telnyx.com/v2/ai/openai",
+    model="moonshotai/Kimi-K2.6",
+)
+```
+
 ## Supported Models
 
 See [Available Models — Telnyx Docs](https://developers.telnyx.com/docs/inference/models) for the full, up-to-date list.
