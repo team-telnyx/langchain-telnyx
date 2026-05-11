@@ -52,6 +52,22 @@ See [Available Models — Telnyx Docs](https://developers.telnyx.com/docs/infere
 | --- | ---:| --- |
 | `thenlper/gte-large` | 1024 | Text embeddings |
 
+## Examples
+
+You can find runnable smoke examples in [`examples/`](./examples):
+
+- `examples/chat_basic.py`
+- `examples/embeddings_basic.py`
+- `examples/chat_with_env.py`
+
+Run them with:
+
+```bash
+export TELNYX_API_KEY="your-api-key"
+python examples/chat_basic.py
+python examples/embeddings_basic.py
+```
+
 ## License
 
 MIT
