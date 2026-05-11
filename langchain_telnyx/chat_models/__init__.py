@@ -47,11 +47,11 @@ class ChatTelnyx(ChatOpenAI):
     def is_lc_serializable(cls) -> bool:
         return False
 
-    telnyx_api_key: SecretStr = Field(default=SecretStr(""))
+    telnyx_api_key: SecretStr = Field(default=SecretStr(""), alias="api_key")
     """Telnyx API key."""
     model_name: str = Field(default=DEFAULT_MODEL, alias="model")
     """Model name to use."""
-    telnyx_api_base: str = Field(default=DEFAULT_API_BASE)
+    telnyx_api_base: str = Field(default=DEFAULT_API_BASE, alias="base_url")
     """Base URL path for API requests."""
     tiktoken_enabled: bool = False
     """Set this to False for non-OpenAI implementations."""
@@ -60,14 +60,18 @@ class ChatTelnyx(ChatOpenAI):
     @classmethod
     def validate_environment(cls, values: dict) -> Any:
         """Validate that api key and python package exists in environment."""
+        api_key = values.get("telnyx_api_key") or values.get("api_key")
+        api_base = values.get("telnyx_api_base") or values.get("base_url")
+
         values["telnyx_api_key"] = convert_to_secret_str(
-            get_from_dict_or_env(
+            api_key
+            or get_from_dict_or_env(
                 values,
                 "telnyx_api_key",
                 "TELNYX_API_KEY",
             )
         )
-        values["telnyx_api_base"] = get_from_dict_or_env(
+        values["telnyx_api_base"] = api_base or get_from_dict_or_env(
             values,
             "telnyx_api_base",
             "TELNYX_API_BASE",
