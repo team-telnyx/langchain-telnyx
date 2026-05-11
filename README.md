@@ -60,12 +60,36 @@ You can find runnable smoke examples in [`examples/`](./examples):
 - `examples/embeddings_basic.py`
 - `examples/chat_with_env.py`
 
-Run them with:
+To run them from a local clone:
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+python -m pip install -e .
 export TELNYX_API_KEY="your-api-key"
 python examples/chat_basic.py
+python examples/chat_with_env.py
 python examples/embeddings_basic.py
+```
+
+## Development
+
+Run tests from a local clone:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+python -m pip install pytest pytest-asyncio langchain-core langchain-openai openai
+python -m pytest -q
+```
+
+If you already have the virtual environment ready:
+
+```bash
+source .venv/bin/activate
+python -m pytest -q
 ```
 
 ## License
