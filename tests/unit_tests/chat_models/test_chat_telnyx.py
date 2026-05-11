@@ -57,6 +57,13 @@ def test_chat_telnyx_api_key_as_secret_str() -> None:
         assert isinstance(chat.telnyx_api_key, SecretStr)
 
 
+def test_chat_telnyx_api_key_alias() -> None:
+    """Test public api_key alias works."""
+    with patch.dict(os.environ, {}, clear=True):
+        chat = ChatTelnyx(api_key="alias-test-key")
+        assert chat.telnyx_api_key.get_secret_value() == "alias-test-key"
+
+
 def test_chat_telnyx_missing_api_key() -> None:
     """Test that missing API key raises error."""
     with patch.dict(os.environ, {}, clear=True):
