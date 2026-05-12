@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Publish langchain-telnyx to PyPI using OIDC trusted publishing.
+# Called from the publish-pypi.yml workflow — OIDC only, no PYPI_TOKEN fallback.
+
+set -eux
+
+cd "$(dirname "$0")/../.."
+
+rm -rf dist
+
+if ! command -v uv &> /dev/null; then
+  pip install uv
+fi
+
+uv build
+uv publish
