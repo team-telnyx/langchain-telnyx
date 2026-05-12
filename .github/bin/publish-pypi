@@ -2,7 +2,7 @@
 # Publish langchain-telnyx to PyPI using OIDC trusted publishing.
 # Called from the publish-pypi.yml workflow — OIDC only, no PYPI_TOKEN fallback.
 
-set -eux
+set -eu
 
 cd "$(dirname "$0")/../.."
 
